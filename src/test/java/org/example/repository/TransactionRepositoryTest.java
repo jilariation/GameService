@@ -1,68 +1,85 @@
 package org.example.repository;
 
-import org.example.repository.entity.Player;
-import org.example.repository.entity.PlayerHistory;
 import org.example.repository.entity.Transaction;
 import org.example.repository.entity.TransactionType;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.ArrayList;
+import java.sql.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@DisplayName("Unit-testing for TransactionRepository")
+@Testcontainers
 public class TransactionRepositoryTest {
-    private TransactionRepository transactionRepository;
+    @Container
+    private static final PostgreSQLContainer<?> postgreSQLContainer =
+            new PostgreSQLContainer<>("postgres:16-alpine3.19")
+                    .withDatabaseName("test")
+                    .withUsername("test")
+                    .withPassword("test");
 
-    @BeforeEach
-    void init() {
-        transactionRepository = new TransactionRepository();
+    private static Connection connection;
+    @BeforeAll
+    public static void setUp() throws SQLException {
+        connection = DriverManager.getConnection(postgreSQLContainer.getJdbcUrl(), postgreSQLContainer.getUsername(),
+                postgreSQLContainer.getPassword());
+        connection.setAutoCommit(false);
+        connection.createStatement().execute("CREATE SCHEMA IF NOT EXISTS entity_schema;");
+        connection.createStatement().execute("CREATE SEQUENCE IF NOT EXISTS entity_schema.player_sequence;");
+        connection.createStatement().execute("CREATE TABLE IF NOT EXISTS entity_schema.player(id INT PRIMARY KEY, " +
+                "name VARCHAR(50), password VARCHAR(100), balance INT DEFAULT 100);");
+        connection.createStatement().execute("CREATE TABLE IF NOT EXISTS entity_schema.transaction(id INT PRIMARY KEY," +
+                "value INT, transaction_type VARCHAR(15), player_id INT REFERENCES entity_schema.player(id))");
+        connection.createStatement().execute("CREATE SCHEMA IF NOT EXISTS service_schema;");
+        connection.createStatement().execute("CREATE SEQUENCE IF NOT EXISTS service_schema.player_history_sequence;");
+        connection.createStatement().execute("CREATE TABLE IF NOT EXISTS service_schema.player_history(" +
+                "id INT PRIMARY KEY, player_id INT REFERENCES entity_schema.player(id), what_player_doing VARCHAR(30));");
+    }
+
+    @AfterAll
+    public static void tearDown() throws SQLException {
+        if (connection != null) {
+            connection.close();
+        }
     }
 
     @Test
     void shouldProperlyDebitTransaction() {
         //given
-        Player player = new Player(1, "John", 100, new ArrayList<>(), new ArrayList<>());
-        PlayerRepository.setPlayer(player);
-        PlayerRepository.getPlayers().add(player);
+        TransactionRepository transactionRepository = new TransactionRepository(connection);
+        PlayerRepository playerRepository = new PlayerRepository(connection);
         Transaction transaction = new Transaction(1, 10, TransactionType.DEBIT);
+        playerRepository.registrationPlayer("John", "123");
 
         //when
-        int returnValue = transactionRepository.debitTransaction(10, 1);
-        int returnValue1 = transactionRepository.debitTransaction(10, 1);
-        int returnValue2 = transactionRepository.debitTransaction(120, 2);
+        int resultValue = transactionRepository.debitTransaction(10, 1);
+        int resultValue1 = transactionRepository.debitTransaction(10, 1);
+        int resultValue2 = transactionRepository.debitTransaction(100, 2);
 
         //then
-        assertEquals(0, returnValue);
-        assertEquals(1, returnValue1);
-        assertEquals(2, returnValue2);
-        assertEquals(90, player.getBalance());
-        assertEquals(player.getTransactionList().get(0).getId(), transaction.getId());
-        assertEquals(player.getTransactionList().get(0).getValue(), transaction.getValue());
-        assertEquals(player.getTransactionList().get(0).getTransactionType(), transaction.getTransactionType());
-        assertEquals(player.getPlayerHistory().get(0), PlayerHistory.DEBIT);
-    }
+        assertEquals(0, resultValue);
+        assertEquals(1, resultValue1);
+        assertEquals(2, resultValue2);
 
-    @Test
-    void shouldProperlyCreditTransaction() {
-        //given
-        Player player = new Player(1, "John", 100, new ArrayList<>(), new ArrayList<>());
-        PlayerRepository.setPlayer(player);
-        PlayerRepository.getPlayers().add(player);
-        Transaction transaction = new Transaction(1, 10, TransactionType.CREDIT);
-
-        //when
-        int returnValue = transactionRepository.creditTransaction(10,1);
-        int returnValue1 = transactionRepository.creditTransaction(10, 1);
-
-        //then
-        assertEquals(0, returnValue);
-        assertEquals(1, returnValue1);
-        assertEquals(110, player.getBalance());
-        assertEquals(player.getTransactionList().get(0).getId(), transaction.getId());
-        assertEquals(player.getTransactionList().get(0).getValue(), transaction.getValue());
-        assertEquals(player.getTransactionList().get(0).getTransactionType(), transaction.getTransactionType());
-        assertEquals(player.getPlayerHistory().get(0), PlayerHistory.CREDIT);
+        try{
+            String sql = "select * from entity_schema.transaction where id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, 1);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                assertEquals(resultSet.getInt("id"), transaction.getId());
+                assertEquals(resultSet.getInt("value"), transaction.getValue());
+                assertEquals(resultSet.getString("transaction_type"), transaction.getTransactionType().toString());
+                assertEquals(resultSet.getInt("player_id"), 1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

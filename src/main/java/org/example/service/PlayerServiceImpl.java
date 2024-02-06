@@ -1,16 +1,20 @@
 package org.example.service;
 
 import org.example.repository.PlayerRepository;
+import org.example.repository.dto.DatabaseConnection;
 import org.example.repository.entity.Player;
 
+/**
+ * Implementation of {@link PlayerService} interface
+ */
 public class PlayerServiceImpl implements PlayerService {
-    private final PlayerRepository playerRepository = new PlayerRepository();
+    private final PlayerRepository playerRepository = new PlayerRepository(new DatabaseConnection().getConnection());
 
-    public int registrationPlayer(String name) {
-        return playerRepository.registrationPlayer(name);
+    public void registrationPlayer(String name, String password) {
+        playerRepository.registrationPlayer(name, password);
     }
-    public void loginPlayer(int id) {
-        playerRepository.loginPlayer(id);
+    public void loginPlayer(String name, String password) {
+        playerRepository.loginPlayer(name, password);
     }
     @Override
     public void getInformationAboutPlayer() {
@@ -22,6 +26,6 @@ public class PlayerServiceImpl implements PlayerService {
     }
     @Override
     public Player getPlayer() {
-        return PlayerRepository.getPlayer();
+        return playerRepository.getPlayer();
     }
 }

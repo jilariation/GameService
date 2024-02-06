@@ -1,10 +1,15 @@
 package org.example.service;
 
 import org.example.repository.TransactionRepository;
+import org.example.repository.dto.DatabaseConnection;
 import org.example.repository.entity.Player;
 
+/**
+ * Implementation of {@link TransactionRepository} interface
+ */
 public class TransactionServiceImpl implements TransactionService {
-    private final TransactionRepository transactionRepository = new TransactionRepository();
+    private final TransactionRepository transactionRepository = new TransactionRepository(
+            new DatabaseConnection().getConnection());
     @Override
     public int debitTransaction(int debit, int debitId) {
         return transactionRepository.debitTransaction(debit, debitId);

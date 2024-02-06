@@ -4,10 +4,10 @@
 
   <groupId>org.example</groupId>
   <artifactId>GameService</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.2.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>Wallet-Service</name>
+  <name>GameService</name>
   <url>http://maven.apache.org</url>
 
   <properties>
@@ -15,13 +15,7 @@
   </properties>
 
   <dependencies>
-      <dependency>
-          <groupId>junit</groupId>
-          <artifactId>junit</artifactId>
-          <version>3.8.1</version>
-          <scope>test</scope>
-      </dependency>
-    <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+      <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
@@ -34,6 +28,12 @@
           <version>RELEASE</version>
           <scope>test</scope>
       </dependency>
+      <dependency>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+          <version>4.13.2</version>
+          <scope>test</scope>
+      </dependency>
       <!-- https://mvnrepository.com/artifact/org.mockito/mockito-junit-jupiter -->
       <dependency>
           <groupId>org.mockito</groupId>
@@ -41,7 +41,28 @@
           <version>5.8.0</version>
           <scope>test</scope>
       </dependency>
-
+      <dependency>
+          <groupId>org.postgresql</groupId>
+          <artifactId>postgresql</artifactId>
+          <version>42.6.0</version>
+      </dependency>
+      <dependency>
+          <groupId>org.liquibase</groupId>
+          <artifactId>liquibase-core</artifactId>
+          <version>4.24.0</version>
+      </dependency>
+      <dependency>
+          <groupId>org.testcontainers</groupId>
+          <artifactId>junit-jupiter</artifactId>
+          <version>1.19.4</version>
+          <scope>test</scope>
+      </dependency>
+      <dependency>
+          <groupId>org.testcontainers</groupId>
+          <artifactId>postgresql</artifactId>
+          <version>1.19.4</version>
+          <scope>test</scope>
+      </dependency>
   </dependencies>
     <build>
         <plugins>

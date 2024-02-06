@@ -2,82 +2,163 @@ package org.example.repository;
 
 import org.example.repository.entity.Player;
 import org.example.repository.entity.PlayerHistory;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.*;
+import java.sql.*;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@DisplayName("Unit-testing for PlayerRepository")
+@Testcontainers
 public class PlayerRepositoryTest {
-    private PlayerRepository playerRepository;
+    @Container
+    private static final PostgreSQLContainer<?> postgreSQLContainer =
+            new PostgreSQLContainer<>("postgres:16-alpine3.19")
+                    .withDatabaseName("test")
+                    .withUsername("test")
+                    .withPassword("test");
 
-    @BeforeEach
-    void init() {
-        playerRepository = new PlayerRepository();
-        List<Player> players = spy(new ArrayList<>());
-        PlayerRepository.setPlayers(players);
+    private static Connection connection;
+
+    @BeforeAll
+    public static void setUp() throws SQLException {
+        connection = DriverManager.getConnection(postgreSQLContainer.getJdbcUrl(), postgreSQLContainer.getUsername(),
+                postgreSQLContainer.getPassword());
+        connection.setAutoCommit(false);
+        connection.createStatement().execute("CREATE SCHEMA IF NOT EXISTS entity_schema;");
+        connection.createStatement().execute("CREATE SEQUENCE IF NOT EXISTS entity_schema.player_sequence;");
+        connection.createStatement().execute("CREATE TABLE IF NOT EXISTS entity_schema.player(id INT PRIMARY KEY, " +
+                "name VARCHAR(50), password VARCHAR(100), balance INT DEFAULT 100);");
+        connection.createStatement().execute("CREATE SCHEMA IF NOT EXISTS service_schema;");
+        connection.createStatement().execute("CREATE SEQUENCE IF NOT EXISTS service_schema.player_history_sequence;");
+        connection.createStatement().execute("CREATE TABLE IF NOT EXISTS service_schema.player_history(" +
+                "id INT PRIMARY KEY, player_id INT REFERENCES entity_schema.player(id), what_player_doing VARCHAR(30));");
+    }
+
+    @AfterAll
+    public static void tearDown() throws SQLException {
+        if (connection != null) {
+            connection.close();
+        }
     }
 
     @Test
     void shouldProperlyRegistrationPlayer() {
+        //given
+        PlayerRepository playerRepository = new PlayerRepository(connection);
+        String testName = "John";
+        String testPassword = "123";
+
         //when
-        int id = playerRepository.registrationPlayer("John");
+        playerRepository.registrationPlayer(testName, testPassword);
 
         //then
-        assertNotNull(PlayerRepository.getPlayers().get(0));
-        assertEquals(id, PlayerRepository.getPlayers().get(0).getId());
-        assertEquals("John", PlayerRepository.getPlayers().get(0).getName());
-        assertEquals(100, PlayerRepository.getPlayers().get(0).getBalance());
-        assertEquals(1, PlayerRepository.getPlayers().get(0).getPlayerHistory().size());
-        assertTrue(PlayerRepository.getPlayers().get(0).getPlayerHistory().contains(PlayerHistory.REG));
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM entity_schema.player " +
+                    "where name = ? and password = ?;");
+            preparedStatement.setString(1, testName);
+            preparedStatement.setString(2, testPassword);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            assertTrue(resultSet.next());
+            assertEquals(testName, resultSet.getString("name"));
+            assertEquals(testPassword, resultSet.getString("password"));
+
+            PreparedStatement preparedStatement1 = connection.prepareStatement("SELECT * FROM service_schema.player_history " +
+                    "where id = ?");
+            preparedStatement1.setInt(1, 1);
+            ResultSet resultSet1 = preparedStatement1.executeQuery();
+
+            assertTrue(resultSet1.next());
+            assertEquals(PlayerHistory.REG.toString(), resultSet1.getString("what_player_doing"));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
     void shouldProperlyLoginPlayer() {
         //given
-        Player player = new Player(1, "John", 100, new ArrayList<>(), new ArrayList<>());
-        PlayerRepository.setPlayer(player);
-        PlayerRepository.getPlayers().add(player);
+        PlayerRepository playerRepository = new PlayerRepository(connection);
+        String testName = "John";
+        String testPassword = "123";
+        playerRepository.registrationPlayer(testName, testPassword);
 
         //when
-        playerRepository.loginPlayer(1);
+        playerRepository.loginPlayer(testName, testPassword);
 
         //then
-        assertNotNull(PlayerRepository.getPlayer());
-        assertNotNull(PlayerRepository.getPlayers().get(0));
-        assertTrue(PlayerRepository.getPlayer().getPlayerHistory().contains(PlayerHistory.LOG));
-        assertEquals(PlayerRepository.getPlayer(), player);
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM entity_schema.player " +
+                    "where name = ? and password = ?;");
+            preparedStatement.setString(1, testName);
+            preparedStatement.setString(2, testPassword);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            assertTrue(resultSet.next());
+            assertEquals(testName, resultSet.getString("name"));
+            assertEquals(testPassword, resultSet.getString("password"));
+
+            PreparedStatement preparedStatement1 = connection.prepareStatement("SELECT * FROM service_schema.player_history " +
+                    "where id = ?");
+            preparedStatement1.setInt(1, 2);
+            ResultSet resultSet1 = preparedStatement1.executeQuery();
+
+            assertTrue(resultSet1.next());
+            assertEquals(PlayerHistory.LOG.toString(), resultSet1.getString("what_player_doing"));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
-    void shouldProperlyGetInformationAboutPlayer() {
+    void shouldProperlyGetPlayer() {
         //given
-        Player player = new Player(1, "John", 100, new ArrayList<>(), new ArrayList<>());
-        PlayerRepository.setPlayer(player);
+        PlayerRepository playerRepository = new PlayerRepository(connection);
+        String testName = "John";
+        String testPassword = "123";
+        playerRepository.registrationPlayer(testName, testPassword);
 
         //when
-        playerRepository.getInformationAboutPlayer();
+        Player player = playerRepository.getPlayer();
 
         //then
-        assertNotNull(PlayerRepository.getPlayer());
-        assertTrue(PlayerRepository.getPlayer().getPlayerHistory().contains(PlayerHistory.INFO));
+        assertEquals(3, player.getId());
+        assertEquals(testName, player.getName());
+        assertEquals(testPassword, player.getPassword());
+        assertEquals(100, player.getBalance());
     }
 
     @Test
-    void shouldProperlyGetPlayerHistory() {
+    void shouldProperlyUpdatePlayer() {
         //given
-        Player player = new Player(1, "John", 100, new ArrayList<>(), new ArrayList<>());
-        player.getPlayerHistory().add(PlayerHistory.REG);
-        PlayerRepository.setPlayer(player);
+        PlayerRepository playerRepository = new PlayerRepository(connection);
+        String testName = "Ivan";
+        String testPassword = "123";
+        playerRepository.registrationPlayer(testName, testPassword);
 
         //when
-        playerRepository.getPlayerHistory();
+        playerRepository.updatePlayer(120);
 
         //then
-        assertTrue(PlayerRepository.getPlayer().getPlayerHistory().contains(PlayerHistory.AUDIT));
-        assertTrue(PlayerRepository.getPlayer().getPlayerHistory().contains(PlayerHistory.REG));
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM entity_schema.player " +
+                    "where name = ? and password = ?;");
+            preparedStatement.setString(1, testName);
+            preparedStatement.setString(2, testPassword);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
+            while(resultSet.next())
+                assertEquals(120, resultSet.getInt("balance"));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

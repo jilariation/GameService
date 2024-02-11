@@ -1,11 +1,9 @@
 package org.example;
 
-import org.example.console.ConsoleInteractionImpl;
-import org.example.repository.dto.LiquibaseMigration;
+import org.example.connection.LiquibaseMigration;
 
 public class Main {
     public static void main(String[] args) {
         LiquibaseMigration.getMigrations();
-        new ConsoleInteractionImpl().startWindows();
     }
 }

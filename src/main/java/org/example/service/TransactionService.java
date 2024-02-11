@@ -1,6 +1,9 @@
 package org.example.service;
 
 import org.example.repository.entity.Player;
+import org.example.repository.entity.Transaction;
+
+import java.util.List;
 
 /**
  * Service for processing transactions
@@ -25,6 +28,7 @@ public interface TransactionService {
     /**
      * Displays the {@link Player}'s transaction history
      * @param player The player for whom you want to display his history
+     * @return List of transactions
      */
-    void transactionHistory(Player player);
+    List<Transaction> transactionHistory(Player player);
 }

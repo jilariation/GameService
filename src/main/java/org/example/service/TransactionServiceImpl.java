@@ -1,8 +1,11 @@
 package org.example.service;
 
 import org.example.repository.TransactionRepository;
-import org.example.repository.dto.DatabaseConnection;
+import org.example.connection.DatabaseConnection;
 import org.example.repository.entity.Player;
+import org.example.repository.entity.Transaction;
+
+import java.util.List;
 
 /**
  * Implementation of {@link TransactionRepository} interface
@@ -21,7 +24,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public void transactionHistory(Player player) {
-        transactionRepository.transactionHistory(player);
+    public List<Transaction> transactionHistory(Player player) {
+        return transactionRepository.transactionHistory(player);
     }
 }

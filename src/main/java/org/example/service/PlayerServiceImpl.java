@@ -1,8 +1,9 @@
 package org.example.service;
 
 import org.example.repository.PlayerRepository;
-import org.example.repository.dto.DatabaseConnection;
+import org.example.connection.DatabaseConnection;
 import org.example.repository.entity.Player;
+import org.example.repository.entity.PlayerHistory;
 
 /**
  * Implementation of {@link PlayerService} interface
@@ -17,15 +18,15 @@ public class PlayerServiceImpl implements PlayerService {
         playerRepository.loginPlayer(name, password);
     }
     @Override
-    public void getInformationAboutPlayer() {
-        playerRepository.getInformationAboutPlayer();
-    }
-    @Override
     public void getPlayerHistory() {
         playerRepository.getPlayerHistory();
     }
     @Override
     public Player getPlayer() {
         return playerRepository.getPlayer();
+    }
+    @Override
+    public void addEnumToDatabase(int id, PlayerHistory playerHistory) {
+        playerRepository.addEnumToDatabase(id, playerHistory);
     }
 }

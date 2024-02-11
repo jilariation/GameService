@@ -1,6 +1,7 @@
 package org.example.service;
 
 import org.example.repository.entity.Player;
+import org.example.repository.entity.PlayerHistory;
 
 /**
  *Service for player interaction with the application
@@ -20,11 +21,6 @@ public interface PlayerService {
     void loginPlayer(String name, String password);
 
     /**
-     * Displays all information about the {@link Player}
-     */
-    void getInformationAboutPlayer();
-
-    /**
      * Displays the {@link Player}'s usage history
      */
     void getPlayerHistory();
@@ -33,4 +29,11 @@ public interface PlayerService {
      * @return Returns the {@link Player}
      */
     Player getPlayer();
+
+    /**
+     * add information about player actions
+     * @param id Player id
+     * @param playerHistory What did the player do
+     */
+    void addEnumToDatabase(int id, PlayerHistory playerHistory);
 }

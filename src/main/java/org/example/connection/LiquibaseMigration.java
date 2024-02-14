@@ -1,4 +1,4 @@
-package org.example.connection;
+package org.example.repository.dto;
 
 import liquibase.Liquibase;
 import liquibase.database.Database;
@@ -19,7 +19,7 @@ public class LiquibaseMigration {
             Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(
                     new JdbcConnection(connection));
 
-            Liquibase liquibase = new Liquibase(Property.getPropertyForLiquibase().getProperty("liquibase.changelog"),
+            Liquibase liquibase = new Liquibase(Property.getProperty().getProperty("liquibase.changelog"),
                     new ClassLoaderResourceAccessor(), database);
             liquibase.update();
         } catch (LiquibaseException e) {

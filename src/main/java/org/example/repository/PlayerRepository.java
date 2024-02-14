@@ -26,8 +26,8 @@ public class PlayerRepository {
             preparedStatement.executeUpdate();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             if(resultSet.next()) id = resultSet.getInt(1);
-            addEnumToDatabase(id, PlayerHistory.REG);
             connection.commit();
+            addEnumToDatabase(id, PlayerHistory.REG);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -46,6 +46,16 @@ public class PlayerRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void getInformationAboutPlayer() {
+        Player player = getPlayer();
+        System.out.println(
+                "Id: " + player.getId() + "\n" +
+                "Name: " + player.getName() + "\n" +
+                "Balance: " + player.getBalance() + "\n"
+        );
+        addEnumToDatabase(id, PlayerHistory.INFO);
     }
     public void getPlayerHistory() {
         String sql = "select * from service_schema.player_history where player_id = ?";

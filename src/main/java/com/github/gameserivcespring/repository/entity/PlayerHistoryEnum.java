@@ -1,6 +1,6 @@
-package org.example.repository.entity;
+package com.github.gameserivcespring.repository.entity;
 
-public enum PlayerHistory {
+public enum PlayerHistoryEnum {
     REG,
     LOG,
     INFO,

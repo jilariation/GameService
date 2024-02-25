@@ -5,6 +5,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+/**
+ * Валидатор для {@link Transaction}, который проверяе величину дебита на неотрицательное значение
+ */
 @Component
 public class TransactionCreditValidator implements Validator {
     @Override

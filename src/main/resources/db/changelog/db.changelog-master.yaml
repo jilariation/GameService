@@ -1,7 +1,8 @@
+#Changelog для Liquibase
 databaseChangeLog:
   - include:
-      file: 001-create-table.xml
+      file: 001-create-table.yaml
       relativeToChangelogFile: true
   - include:
-      file: 002-insert-data.xml
+      file: 002-insert-data.yaml
       relativeToChangelogFile: true

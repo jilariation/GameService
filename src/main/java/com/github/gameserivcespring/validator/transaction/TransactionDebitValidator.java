@@ -5,6 +5,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+/**
+ * Валидатор для {@link Transaction}, который проверяет значение кредита на величину, не превышающую баланс
+ */
 @Component
 public class TransactionDebitValidator implements Validator {
 

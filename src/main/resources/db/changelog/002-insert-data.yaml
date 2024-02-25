@@ -1,0 +1,33 @@
+# Yaml конфигурация на предварительное заполнение данных
+databaseChangeLog:
+  - changeSet:
+      id: "002-insert-data"
+      author: "jilariation"
+      changes:
+        - insert:
+            schemaName: "entity_schema"
+            tableName: "player"
+            columns:
+              - column:
+                  name: "id"
+                  valueNumeric: "1"
+              - column:
+                  name: "mail"
+                  value: "example@mail.com"
+              - column:
+                  name: "password"
+                  value: "123456"
+
+        - insert:
+            schemaName: "service_schema"
+            tableName: "player_history"
+            columns:
+              - column:
+                  name: "id"
+                  valueNumeric: "1"
+              - column:
+                  name: "player_id"
+                  valueNumeric: "1"
+              - column:
+                  name: "what_player_doing"
+                  value: "REG"

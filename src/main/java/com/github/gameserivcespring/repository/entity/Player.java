@@ -1,10 +1,7 @@
 package com.github.gameserivcespring.repository.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 @Entity
@@ -25,10 +22,11 @@ public class Player {
     @NotNull
     private Integer id;
 
-    @Column(name = "name")
+    @Column(name = "mail")
     @NotEmpty
-    @Size(min = 2, max = 100, message = "Name is incorrect")
-    private String name;
+    @Size(min = 2, max = 100, message = "Mail is incorrect")
+    @Email
+    private String mail;
 
     @Column(name = "password")
     @NotEmpty

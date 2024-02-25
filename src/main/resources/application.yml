@@ -1,0 +1,14 @@
+#Конфигурация для Spring
+spring:
+  datasource:
+    url: jdbc:postgresql://192.168.99.100:5432/dev_gs_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+#Конфигурация для Springdoc и Swagger UI
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui-custom.html
+    operations-sorter: method

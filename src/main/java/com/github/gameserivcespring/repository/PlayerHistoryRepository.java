@@ -7,7 +7,15 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Репозиторий для {@link PlayerHistory}
+ */
 @Repository
 public interface PlayerHistoryRepository extends JpaRepository<PlayerHistory, Integer> {
+    /**
+     * Находит все операции для {@link Player}
+     * @param player Игрок, который совершал операции
+     * @return Возвращает историю игрока
+     */
     List<PlayerHistory> findAllByPlayer(Player player);
 }

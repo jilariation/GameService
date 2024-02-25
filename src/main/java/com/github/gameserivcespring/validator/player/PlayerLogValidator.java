@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+/**
+ * Валидатор для {@link Player}, который проверяет нахождение игрока в БД
+ */
 @Component
 public class PlayerLogValidator implements Validator {
     private final PlayerService playerService;
@@ -24,7 +27,7 @@ public class PlayerLogValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         Player player = (Player) target;
-        if(playerService.findPlayerByNameAndPassword(player.getName(), player.getPassword()).isEmpty())
+        if(playerService.findPlayerByMailAndPassword(player.getMail(), player.getPassword()) == null)
             errors.rejectValue("player", "A player with this password and login was not found");
     }
 }

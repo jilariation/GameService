@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+/**
+ * Валидатор для {@link Player}, который проверяет правильность присылаемых почты и пароля
+ */
 @Component
 public class PlayerRegValidator implements Validator {
     private final PlayerService playerService;
@@ -25,7 +28,7 @@ public class PlayerRegValidator implements Validator {
     public void validate(Object target, Errors errors) {
         Player player = (Player) target;
 
-        if(playerService.findByName(player.getName()).isPresent())
-            errors.rejectValue("name", "There is a player with that name");
+        if(playerService.findByMail(player.getMail()) != null)
+            errors.rejectValue("name", "There is a player with that mail");
     }
 }

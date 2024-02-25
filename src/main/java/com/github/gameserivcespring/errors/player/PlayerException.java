@@ -1,4 +1,4 @@
-package com.github.gameserivcespring.errors;
+package com.github.gameserivcespring.errors.player;
 
 public class PlayerException extends RuntimeException {
     public PlayerException(String msg) {

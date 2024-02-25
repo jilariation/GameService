@@ -23,30 +23,35 @@ public class PlayerServiceImpl implements PlayerService{
 
     @Override
     public void update(Player updatedPlayer,int id) {
-        Player player =  playerRepository.findById(id).get();
-        player.setName(player.getName());
+        Player player =  playerRepository.findById(id);
+        player.setMail(player.getMail());
         player.setPassword(player.getPassword());
         player.setBalance(player.getBalance());
         playerRepository.save(player);
     }
 
     @Override
-    public Optional<Player> loginPlayer(String name, String password) {
-        return playerRepository.findPlayerByNameAndPassword(name, password);
+    public Player loginPlayer(String mail, String password) {
+        return playerRepository.findPlayerByMailAndPassword(mail, password);
     }
 
     @Override
-    public Optional<Player> findPlayerByNameAndPassword(String name, String password) {
-        return playerRepository.findPlayerByNameAndPassword(name, password);
+    public Player findPlayerByMailAndPassword(String name, String password) {
+        return playerRepository.findPlayerByMailAndPassword(name, password);
     }
 
     @Override
-    public Optional<Player> findByName(String name) {
-        return playerRepository.findByName(name);
+    public Player findByMail(String mail) {
+        return playerRepository.findByMail(mail);
     }
 
     @Override
-    public Optional<Player> findById(int id) {
+    public Player findById(int id) {
         return playerRepository.findById(id);
+    }
+
+    @Override
+    public void deletePlayer(int id) {
+        playerRepository.deleteById(id);
     }
 }

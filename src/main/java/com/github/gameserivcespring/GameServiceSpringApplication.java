@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean;
 @OpenAPIDefinition(
 	info = @Info(
 			title = "Game Service System API",
-			description = "Game Service", version = "0.4.0",
+			description = "Game Service", version = "1.0.0",
 			contact = @Contact(
 					name = "Александр Марыгин",
 					email = "aleksandermarigyn18@gmail.com"

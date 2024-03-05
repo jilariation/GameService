@@ -1,5 +1,6 @@
-package com.github.gameserivcespring.repository.entity;
+package com.github.gameserivcespring.repository.transaction.entity;
 
+import com.github.gameserivcespring.repository.player.entity.Player;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;

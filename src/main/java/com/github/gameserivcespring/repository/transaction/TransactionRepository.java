@@ -1,6 +1,6 @@
-package com.github.gameserivcespring.repository;
+package com.github.gameserivcespring.repository.transaction;
 
-import com.github.gameserivcespring.repository.entity.Transaction;
+import com.github.gameserivcespring.repository.transaction.entity.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

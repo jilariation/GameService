@@ -1,4 +1,4 @@
-package com.github.gameserivcespring.repository.entity;
+package com.github.gameserivcespring.repository.player.entity;
 
 public enum PlayerHistoryEnum {
     REG,

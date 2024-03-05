@@ -1,10 +1,8 @@
-package com.github.gameserivcespring.repository;
+package com.github.gameserivcespring.repository.player;
 
-import com.github.gameserivcespring.repository.entity.Player;
+import com.github.gameserivcespring.repository.player.entity.Player;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
 
 /**
  * Репозиторий для {@link Player}
@@ -32,4 +30,25 @@ public interface PlayerRepository extends JpaRepository<Player, Integer> {
      * @return Возращает либо игрока, либо null
      */
     Player findById(int id);
+
+    /**
+     * Находит игрока по его имени
+     * @param username Имя игрока
+     * @return Возвращает игрока
+     */
+    Player findByUsername(String username);
+
+    /**
+     * Проверяет существование игрока по его имени
+     * @param username Имя игрока
+     * @return Возвращает true или false в зависимости от результата
+     */
+    boolean existsByUsername(String username);
+
+    /**
+     * Проверяет существование игрока по его почте
+     * @param mail Почта игрока
+     * @return Возвращает true или false в зависимости от результата
+     */
+    boolean existsByMail(String mail);
 }

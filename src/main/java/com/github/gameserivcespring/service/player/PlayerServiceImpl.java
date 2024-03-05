@@ -1,24 +1,22 @@
 package com.github.gameserivcespring.service.player;
 
-import com.github.gameserivcespring.repository.PlayerRepository;
-import com.github.gameserivcespring.repository.entity.Player;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.github.gameserivcespring.repository.player.PlayerRepository;
+import com.github.gameserivcespring.repository.player.entity.Player;
+import com.github.gameserivcespring.repository.player.entity.Role;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
+@RequiredArgsConstructor
 public class PlayerServiceImpl implements PlayerService{
     private final PlayerRepository playerRepository;
 
-    @Autowired
-    public PlayerServiceImpl(PlayerRepository playerRepository) {
-        this.playerRepository = playerRepository;
-    }
-
     @Override
-    public void save(Player player) {
-        playerRepository.save(player);
+    public Player save(Player player) {
+        return playerRepository.save(player);
     }
 
     @Override
@@ -31,13 +29,16 @@ public class PlayerServiceImpl implements PlayerService{
     }
 
     @Override
-    public Player loginPlayer(String mail, String password) {
-        return playerRepository.findPlayerByMailAndPassword(mail, password);
-    }
+    public Player create(Player player) {
+        if (playerRepository.existsByUsername(player.getUsername())) {
+            throw new RuntimeException("Пользователь с таким именем уже существует");
+        }
 
-    @Override
-    public Player findPlayerByMailAndPassword(String name, String password) {
-        return playerRepository.findPlayerByMailAndPassword(name, password);
+        if (playerRepository.existsByMail(player.getMail())) {
+            throw new RuntimeException("Пользователь с таким email уже существует");
+        }
+
+        return save(player);
     }
 
     @Override
@@ -51,7 +52,30 @@ public class PlayerServiceImpl implements PlayerService{
     }
 
     @Override
+    public Player getCurrentUser() {
+        var username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return getByUsername(username);
+    }
+
+    @Override
+    public void getAdmin() {
+        var user = getCurrentUser();
+        user.setRole(Role.ROLE_ADMIN);
+        save(user);
+    }
+
+    @Override
     public void deletePlayer(int id) {
         playerRepository.deleteById(id);
+    }
+
+    @Override
+    public Player getByUsername(String username) {
+        return playerRepository.findByUsername(username);
+    }
+
+    @Override
+    public UserDetailsService userDetailsService() {
+        return this::getByUsername;
     }
 }

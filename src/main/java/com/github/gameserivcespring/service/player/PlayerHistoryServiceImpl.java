@@ -1,8 +1,8 @@
 package com.github.gameserivcespring.service.player;
 
-import com.github.gameserivcespring.repository.PlayerHistoryRepository;
-import com.github.gameserivcespring.repository.entity.Player;
-import com.github.gameserivcespring.repository.entity.PlayerHistory;
+import com.github.gameserivcespring.repository.history.PlayerHistoryRepository;
+import com.github.gameserivcespring.repository.player.entity.Player;
+import com.github.gameserivcespring.repository.history.entity.PlayerHistory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

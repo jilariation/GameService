@@ -12,11 +12,17 @@ databaseChangeLog:
                   name: "id"
                   valueNumeric: "1"
               - column:
+                  name: "username"
+                  value: "Example"
+              - column:
                   name: "mail"
                   value: "example@mail.com"
               - column:
                   name: "password"
                   value: "123456"
+              - column:
+                  name: "role"
+                  value: "ROLE_USER"
 
         - insert:
             schemaName: "service_schema"

@@ -1,9 +1,8 @@
 package com.github.gameserivcespring.service.player;
 
 
-import com.github.gameserivcespring.repository.entity.Player;
-
-import java.util.Optional;
+import com.github.gameserivcespring.repository.player.entity.Player;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
  * Сервис для {@link Player}
@@ -11,8 +10,9 @@ import java.util.Optional;
 public interface PlayerService {
     /**
      * Регистрирует игрока {@link Player}
+     * @return Возвращает {@link Player}
      */
-    void save(Player player);
+    Player save(Player player);
 
     /**
      * Обновляет игрока в БД
@@ -20,38 +20,59 @@ public interface PlayerService {
      * @param id ID игрока
      */
     void update(Player updatedPlayer, int id);
-    /**
-     * Авторизует {@link Player}
-     * @param mail Почта игрока
-     * @param password Пароль игрока
-     */
-    Player loginPlayer(String mail, String password);
 
     /**
-     * Находит игрока с таким логином и паролем
-     * @param mail Логиг(почта) игрока
-     * @param password Пароль игрока
-     * @return Возвращает либо игрока, либо null
+     * Создает игрока
+     * @param player Сущность игрока
+     * @return Возвращает {@link Player}
      */
-    Player findPlayerByMailAndPassword(String mail, String password);
-
-    /**
-     * Находит игрока по его почте
-     * @param mail Почта игрока
-     * @return Возвращает либо игрока, либо null
-     */
-    Player findByMail(String mail);
-
-    /**
-     * Находит игрока по его ID
-     * @param id ID игрока
-     * @return Возращает либо игрока, либо null
-     */
-    Player findById(int id);
+    Player create(Player player);
 
     /**
      * Удаляет игрока по его ID
      * @param id ID игрока
      */
     void deletePlayer(int id);
+
+    /**
+     * Возвращает игрока по его имени
+     * @param username Имя игрока
+     * @return Возращает {@link Player}
+     */
+    Player getByUsername(String username);
+
+    /**
+     * Получение пользователя по имени пользователя
+     * <p>
+     * Нужен для Spring Security
+     * @return Возвращает {@link UserDetailsService}
+     */
+    UserDetailsService userDetailsService();
+
+    /**
+     * Находит игрока по его почте
+     * @param mail Почта игрока
+     * @return Возвращает {@link Player}
+     */
+    Player findByMail(String mail);
+
+    /**
+     * Находит игрока по его ID
+     * @param id ID игрока
+     * @return Возращает {@link Player}
+     */
+    Player findById(int id);
+
+    /**
+     * Получение текущего игрока
+     * @return Возращает {@link Player}
+     */
+    Player getCurrentUser();
+
+    /**
+     * Выдача прав администратора текущему пользователю
+     * <p>
+     * Нужен для демонстрации
+     */
+    void getAdmin();
 }

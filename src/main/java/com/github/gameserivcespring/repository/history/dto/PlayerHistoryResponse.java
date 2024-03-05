@@ -1,20 +1,22 @@
-package com.github.gameserivcespring.repository.dto;
+package com.github.gameserivcespring.repository.history.dto;
 
-import com.github.gameserivcespring.repository.entity.Player;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@Schema(description = "DTO истории игрока")
+@Schema(description = "Класс для вывода истории игрока")
 @Getter
 @Setter
-public class PlayerHistoryDTO {
-    @Schema(description = "Сам игрок", example = "player")
+@AllArgsConstructor
+public class PlayerHistoryResponse {
+    @Schema(description = "ID игрока", example = "1")
     @NotNull
-    private Player player;
+    private Integer id;
 
     @Schema(description = "Операция, которую совершил игрок", example = "REG")
     @NotNull
     private String whatPlayerDoing;
+
 }

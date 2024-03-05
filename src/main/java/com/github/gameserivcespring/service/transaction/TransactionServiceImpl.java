@@ -1,20 +1,16 @@
 package com.github.gameserivcespring.service.transaction;
 
-import com.github.gameserivcespring.repository.TransactionRepository;
-import com.github.gameserivcespring.repository.entity.Transaction;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.github.gameserivcespring.repository.transaction.TransactionRepository;
+import com.github.gameserivcespring.repository.transaction.entity.Transaction;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
-
-    @Autowired
-    public TransactionServiceImpl(TransactionRepository transactionRepository) {
-        this.transactionRepository = transactionRepository;
-    }
 
     @Override
     public Optional<Transaction> findById(int id) {

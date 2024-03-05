@@ -1,6 +1,6 @@
 package com.github.gameserivcespring.validator.transaction;
 
-import com.github.gameserivcespring.repository.entity.Transaction;
+import com.github.gameserivcespring.repository.transaction.entity.Transaction;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;

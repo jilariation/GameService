@@ -1,7 +1,7 @@
-package com.github.gameserivcespring.repository;
+package com.github.gameserivcespring.repository.history;
 
-import com.github.gameserivcespring.repository.entity.Player;
-import com.github.gameserivcespring.repository.entity.PlayerHistory;
+import com.github.gameserivcespring.repository.player.entity.Player;
+import com.github.gameserivcespring.repository.history.entity.PlayerHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

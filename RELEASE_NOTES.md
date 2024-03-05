@@ -1,5 +1,9 @@
 # Release Notes
 
+## 1.0.1-SNAPSHOT
+
+* GS-7: Added authorization and registration using JWT and Spring Security
+
 ## 1.0.0-SNAPSHOT
 
 * GS-6: RELEASE!!!!!

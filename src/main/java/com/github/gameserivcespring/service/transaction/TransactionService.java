@@ -1,6 +1,6 @@
 package com.github.gameserivcespring.service.transaction;
 
-import com.github.gameserivcespring.repository.entity.Transaction;
+import com.github.gameserivcespring.repository.transaction.entity.Transaction;
 
 import java.util.Optional;
 

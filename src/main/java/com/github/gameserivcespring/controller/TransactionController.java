@@ -1,7 +1,10 @@
 package com.github.gameserivcespring.controller;
 
+import com.github.gameserivcespring.aspect.annotation.History;
+import com.github.gameserivcespring.aspect.annotation.Logging;
 import com.github.gameserivcespring.errors.transaction.TransactionErrorResponse;
 import com.github.gameserivcespring.errors.transaction.TransactionException;
+import com.github.gameserivcespring.repository.player.entity.Player;
 import com.github.gameserivcespring.repository.transaction.dto.TransactionDTO;
 import com.github.gameserivcespring.repository.history.entity.PlayerHistory;
 import com.github.gameserivcespring.repository.player.entity.PlayerHistoryEnum;
@@ -21,9 +24,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,18 +53,19 @@ public class TransactionController {
                     mediaType = "application/json") }),
             @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = TransactionErrorResponse.class),
                     mediaType = "application/json") }) })
-    @PostMapping("/{id}/transaction/debit")
+    @Logging
+    @History(typeOfHistory = PlayerHistoryEnum.DEBIT)
+    @PostMapping("/transaction/debit")
     public ResponseEntity<HttpStatus> debit(
             @Parameter(description = "DTO транзакции") @RequestBody @Valid TransactionDTO transactionDTO,
-            @Parameter(description = "ID игрока") @PathVariable int id,
             BindingResult bindingResult) {
         Transaction transaction = convertToTransaction(transactionDTO);
-        transaction.setPlayer(playerService.findById(id));
+        Player player = getPlayer();
+        transaction.setPlayer(player);
         transactionDebitValidator.validate(transaction, bindingResult);
         transactionService.save(transaction);
         transaction.getPlayer().setBalance(transaction.getPlayer().getBalance() - transaction.getValue());
-        playerService.update(transaction.getPlayer(), id);
-        playerHistoryService.save(new PlayerHistory(transaction.getPlayer(), PlayerHistoryEnum.DEBIT.name()));
+        playerService.update(transaction.getPlayer(), player.getId());
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
@@ -75,24 +79,31 @@ public class TransactionController {
                     mediaType = "application/json") }),
             @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = TransactionErrorResponse.class),
                     mediaType = "application/json") }) })
-    @PostMapping("/{id}/transaction/credit")
+    @Logging
+    @History(typeOfHistory = PlayerHistoryEnum.CREDIT)
+    @PostMapping("/transaction/credit")
     public ResponseEntity<HttpStatus> credit(
             @Parameter(description = "DTO транзакции") @RequestBody @Valid TransactionDTO transactionDTO,
-            @Parameter(description = "ID игрока") @PathVariable int id,
             BindingResult bindingResult) {
         Transaction transaction = convertToTransaction(transactionDTO);
-        transaction.setPlayer(playerService.findById(id));
+        Player player = getPlayer();
+        transaction.setPlayer(getPlayer());
         transactionCreditValidator.validate(transaction, bindingResult);
         transactionService.save(transaction);
         transaction.getPlayer().setBalance(transaction.getPlayer().getBalance() + transaction.getValue());
-        playerService.update(transaction.getPlayer(), id);
-        playerHistoryService.save(new PlayerHistory(transaction.getPlayer(), PlayerHistoryEnum.CREDIT.name()));
+        playerService.update(transaction.getPlayer(), player.getId());
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     private Transaction convertToTransaction(TransactionDTO transactionDTO) {
         return modelMapper.map(transactionDTO, Transaction.class);
     }
+
+    private Player getPlayer(){
+        return playerService.getByUsername(SecurityContextHolder.getContext()
+                .getAuthentication().getName());
+    }
+
     @ExceptionHandler
     private ResponseEntity<TransactionErrorResponse> handleException(TransactionException e) {
         TransactionErrorResponse response = new TransactionErrorResponse(

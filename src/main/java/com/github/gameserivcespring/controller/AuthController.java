@@ -1,5 +1,8 @@
 package com.github.gameserivcespring.controller;
 
+import com.github.gameserivcespring.aspect.annotation.History;
+import com.github.gameserivcespring.aspect.annotation.Logging;
+import com.github.gameserivcespring.repository.player.entity.PlayerHistoryEnum;
 import com.github.gameserivcespring.repository.security.dto.SignInRequest;
 import com.github.gameserivcespring.repository.security.dto.SignUpRequest;
 import com.github.gameserivcespring.repository.security.dto.JwtAuthenticationResponse;
@@ -21,12 +24,15 @@ public class AuthController {
     private final AuthenticationService authenticationService;
 
     @Operation(summary = "Регистрация пользователя")
+    @Logging
     @PostMapping("/sign-up")
     public JwtAuthenticationResponse signUp(@RequestBody @Valid SignUpRequest request) {
         return authenticationService.signUp(request);
     }
 
     @Operation(summary = "Авторизация пользователя")
+    @Logging
+    @History(typeOfHistory = PlayerHistoryEnum.LOG)
     @PostMapping("/sign-in")
     public JwtAuthenticationResponse signIn(@RequestBody @Valid SignInRequest request) {
         return authenticationService.signIn(request);

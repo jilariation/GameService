@@ -6,7 +6,6 @@ import com.github.gameserivcespring.repository.player.entity.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,7 +32,6 @@ public class PlayerServiceImpl implements PlayerService{
         if (playerRepository.existsByUsername(player.getUsername())) {
             throw new RuntimeException("Пользователь с таким именем уже существует");
         }
-
         if (playerRepository.existsByMail(player.getMail())) {
             throw new RuntimeException("Пользователь с таким email уже существует");
         }

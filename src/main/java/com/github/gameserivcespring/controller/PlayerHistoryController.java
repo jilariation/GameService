@@ -1,5 +1,6 @@
 package com.github.gameserivcespring.controller;
 
+import com.github.gameserivcespring.aspect.annotation.Logging;
 import com.github.gameserivcespring.errors.player.PlayerErrorResponse;
 import com.github.gameserivcespring.repository.history.dto.PlayerHistoryDTO;
 import com.github.gameserivcespring.repository.history.dto.PlayerHistoryResponse;
@@ -15,7 +16,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +34,7 @@ public class PlayerHistoryController {
     private final PlayerHistoryService playerHistoryService;
     private final PlayerService playerService;
 
+    @Logging
     @Operation(
             summary = "История игрока по его ID",
             description = "Выводит историю игрока по его ID"

@@ -1,5 +1,9 @@
 # Release Notes
 
+## 1.0.2-SNAPSHOT
+
+* GS-8: Added logging using AOP. Player history recording is now done via AOP
+
 ## 1.0.1-SNAPSHOT
 
 * GS-7: Added authorization and registration using JWT and Spring Security

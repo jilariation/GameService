@@ -21,18 +21,12 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class PlayerController {
     private final PlayerService playerService;
-    private final ModelMapper modelMapper;
 
     @Logging
     @History(typeOfHistory = PlayerHistoryEnum.INFO)
     @GetMapping("/about")
     public ResponseEntity<PlayerDTO> getPlayer() {
-        return ResponseEntity.ok(convertToPlayerDTO(playerService.getByUsername(SecurityContextHolder.getContext()
-                .getAuthentication().getName()))
-        );
-    }
-
-    private PlayerDTO convertToPlayerDTO(Player player) {
-        return modelMapper.map(player, PlayerDTO.class);
+        return ResponseEntity.ok(playerService.convertToPlayerDTO(playerService.getByUsername(
+                SecurityContextHolder.getContext().getAuthentication().getName())));
     }
 }

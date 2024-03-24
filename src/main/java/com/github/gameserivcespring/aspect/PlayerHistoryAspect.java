@@ -24,15 +24,10 @@ public class PlayerHistoryAspect {
     @Logging
     @AfterReturning(pointcut = "@annotation(historyAnnotation)")
     public void trackPlayerHistoryMethod(History historyAnnotation) {
-        PlayerHistoryEnum typeOfHistory = historyAnnotation.typeOfHistory();
-        Player player = getPlayer();
+        var typeOfHistory = historyAnnotation.typeOfHistory();
+        var player = playerService.getCurrentUser();
         PlayerHistory playerHistory = new PlayerHistory(player, typeOfHistory.name());
         playerHistoryService.save(playerHistory);
         System.out.println(playerHistory);
-    }
-
-    private Player getPlayer(){
-        return playerService.getByUsername(SecurityContextHolder.getContext()
-                .getAuthentication().getName());
     }
 }

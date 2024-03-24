@@ -1,9 +1,11 @@
 package com.github.gameserivcespring.service.player;
 
 import com.github.gameserivcespring.repository.player.PlayerRepository;
+import com.github.gameserivcespring.repository.player.dto.PlayerDTO;
 import com.github.gameserivcespring.repository.player.entity.Player;
 import com.github.gameserivcespring.repository.player.entity.Role;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PlayerServiceImpl implements PlayerService{
     private final PlayerRepository playerRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public Player save(Player player) {
@@ -19,11 +22,8 @@ public class PlayerServiceImpl implements PlayerService{
     }
 
     @Override
-    public void update(Player updatedPlayer,int id) {
-        Player player =  playerRepository.findById(id);
-        player.setMail(player.getMail());
-        player.setPassword(player.getPassword());
-        player.setBalance(player.getBalance());
+    public void update(int value, Player player) {
+        player.setBalance(player.getBalance() + value);
         playerRepository.save(player);
     }
 
@@ -56,10 +56,8 @@ public class PlayerServiceImpl implements PlayerService{
     }
 
     @Override
-    public void getAdmin() {
-        var user = getCurrentUser();
-        user.setRole(Role.ROLE_ADMIN);
-        save(user);
+    public PlayerDTO convertToPlayerDTO(Player player) {
+        return modelMapper.map(player, PlayerDTO.class);
     }
 
     @Override

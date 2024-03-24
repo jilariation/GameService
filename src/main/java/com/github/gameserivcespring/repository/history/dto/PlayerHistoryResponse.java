@@ -18,5 +18,4 @@ public class PlayerHistoryResponse {
     @Schema(description = "Операция, которую совершил игрок", example = "REG")
     @NotNull
     private String whatPlayerDoing;
-
 }

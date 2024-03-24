@@ -1,6 +1,7 @@
 package com.github.gameserivcespring.service.player;
 
 
+import com.github.gameserivcespring.repository.player.dto.PlayerDTO;
 import com.github.gameserivcespring.repository.player.entity.Player;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -15,11 +16,11 @@ public interface PlayerService {
     Player save(Player player);
 
     /**
-     * Обновляет игрока в БД
-     * @param updatedPlayer Обновленные данные об игроке
-     * @param id ID игрока
+     * Обновляет даные об игроке
+     * @param value Значение транзакции
+     * @param player Игрок, который соверашает транзакцию
      */
-    void update(Player updatedPlayer, int id);
+    void update(int value, Player player);
 
     /**
      * Создает игрока
@@ -70,9 +71,9 @@ public interface PlayerService {
     Player getCurrentUser();
 
     /**
-     * Выдача прав администратора текущему пользователю
-     * <p>
-     * Нужен для демонстрации
+     * Преобразует {@link Player} в {@link PlayerDTO}
+     * @param player Игрок, которого нужно преобразовать
+     * @return Возвращает DTO игрока
      */
-    void getAdmin();
+    PlayerDTO convertToPlayerDTO(Player player);
 }

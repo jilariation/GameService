@@ -36,12 +36,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/player")
 @RequiredArgsConstructor
 public class TransactionController {
+
     private final PlayerService playerService;
     private final TransactionService transactionService;
-    private final PlayerHistoryService playerHistoryService;
     private final TransactionDebitValidator transactionDebitValidator;
     private final TransactionCreditValidator transactionCreditValidator;
-    private final ModelMapper modelMapper;
 
     @Operation(
             summary = "Операция дебита",
@@ -53,19 +52,19 @@ public class TransactionController {
                     mediaType = "application/json") }),
             @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = TransactionErrorResponse.class),
                     mediaType = "application/json") }) })
+
     @Logging
     @History(typeOfHistory = PlayerHistoryEnum.DEBIT)
     @PostMapping("/transaction/debit")
     public ResponseEntity<HttpStatus> debit(
             @Parameter(description = "DTO транзакции") @RequestBody @Valid TransactionDTO transactionDTO,
             BindingResult bindingResult) {
-        Transaction transaction = convertToTransaction(transactionDTO);
-        Player player = getPlayer();
+        var transaction = transactionService.convertToTransaction(transactionDTO);
+        var player = playerService.getCurrentUser();
         transaction.setPlayer(player);
         transactionDebitValidator.validate(transaction, bindingResult);
         transactionService.save(transaction);
-        transaction.getPlayer().setBalance(transaction.getPlayer().getBalance() - transaction.getValue());
-        playerService.update(transaction.getPlayer(), player.getId());
+        playerService.update((-1)*transaction.getValue(), player);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
@@ -79,29 +78,20 @@ public class TransactionController {
                     mediaType = "application/json") }),
             @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = TransactionErrorResponse.class),
                     mediaType = "application/json") }) })
+
     @Logging
     @History(typeOfHistory = PlayerHistoryEnum.CREDIT)
     @PostMapping("/transaction/credit")
     public ResponseEntity<HttpStatus> credit(
             @Parameter(description = "DTO транзакции") @RequestBody @Valid TransactionDTO transactionDTO,
             BindingResult bindingResult) {
-        Transaction transaction = convertToTransaction(transactionDTO);
-        Player player = getPlayer();
-        transaction.setPlayer(getPlayer());
+        var transaction = transactionService.convertToTransaction(transactionDTO);
+        var player = playerService.getCurrentUser();
+        transaction.setPlayer(player);
         transactionCreditValidator.validate(transaction, bindingResult);
         transactionService.save(transaction);
-        transaction.getPlayer().setBalance(transaction.getPlayer().getBalance() + transaction.getValue());
-        playerService.update(transaction.getPlayer(), player.getId());
+        playerService.update(transaction.getValue(), player);
         return ResponseEntity.ok(HttpStatus.OK);
-    }
-
-    private Transaction convertToTransaction(TransactionDTO transactionDTO) {
-        return modelMapper.map(transactionDTO, Transaction.class);
-    }
-
-    private Player getPlayer(){
-        return playerService.getByUsername(SecurityContextHolder.getContext()
-                .getAuthentication().getName());
     }
 
     @ExceptionHandler

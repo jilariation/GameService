@@ -4,12 +4,8 @@ import com.github.gameserivcespring.aspect.annotation.History;
 import com.github.gameserivcespring.aspect.annotation.Logging;
 import com.github.gameserivcespring.errors.transaction.TransactionErrorResponse;
 import com.github.gameserivcespring.errors.transaction.TransactionException;
-import com.github.gameserivcespring.repository.player.entity.Player;
-import com.github.gameserivcespring.repository.transaction.dto.TransactionDTO;
-import com.github.gameserivcespring.repository.history.entity.PlayerHistory;
+import com.github.gameserivcespring.repository.transaction.dto.TransactionDTO;;
 import com.github.gameserivcespring.repository.player.entity.PlayerHistoryEnum;
-import com.github.gameserivcespring.repository.transaction.entity.Transaction;
-import com.github.gameserivcespring.service.player.PlayerHistoryService;
 import com.github.gameserivcespring.service.player.PlayerService;
 import com.github.gameserivcespring.service.transaction.TransactionService;
 import com.github.gameserivcespring.validator.transaction.TransactionCreditValidator;
@@ -23,10 +19,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,11 +54,9 @@ public class TransactionController {
             @Parameter(description = "DTO транзакции") @RequestBody @Valid TransactionDTO transactionDTO,
             BindingResult bindingResult) {
         var transaction = transactionService.convertToTransaction(transactionDTO);
-        var player = playerService.getCurrentUser();
-        transaction.setPlayer(player);
         transactionDebitValidator.validate(transaction, bindingResult);
         transactionService.save(transaction);
-        playerService.update((-1)*transaction.getValue(), player);
+        playerService.update((-1)*transaction.value(), transaction.player());
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
@@ -86,11 +78,9 @@ public class TransactionController {
             @Parameter(description = "DTO транзакции") @RequestBody @Valid TransactionDTO transactionDTO,
             BindingResult bindingResult) {
         var transaction = transactionService.convertToTransaction(transactionDTO);
-        var player = playerService.getCurrentUser();
-        transaction.setPlayer(player);
         transactionCreditValidator.validate(transaction, bindingResult);
         transactionService.save(transaction);
-        playerService.update(transaction.getValue(), player);
+        playerService.update(transaction.value(), transaction.player());
         return ResponseEntity.ok(HttpStatus.OK);
     }
 

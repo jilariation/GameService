@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,11 +23,13 @@ public class PlayerHistoryServiceImpl implements PlayerHistoryService {
     private final ModelMapper modelMapper;
 
     @Override
+    @Transactional
     public void save(PlayerHistory playerHistory) {
         playerHistoryRepository.save(playerHistory);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<PlayerHistory> findAllByPlayer(Player player) {
         return playerHistoryRepository.findAllByPlayer(player);
     }
@@ -37,12 +40,13 @@ public class PlayerHistoryServiceImpl implements PlayerHistoryService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<PlayerHistoryResponse> getAllPlayerHistory(int id) {
         List<PlayerHistoryDTO> playerHistoryDTOList = playerHistoryRepository.findAllByPlayer(playerRepository.findById(id))
                 .stream().map(this::convertToPlayerHistoryDTO).toList();
 
         return playerHistoryDTOList.stream().map(playerHistoryDTO -> new PlayerHistoryResponse(
-                playerHistoryDTO.getPlayer().getId(),
+                playerHistoryDTO.getPlayer().id(),
                 playerHistoryDTO.getWhatPlayerDoing())).collect(Collectors.toList());
     }
 }

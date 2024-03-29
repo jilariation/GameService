@@ -19,7 +19,7 @@ public class TransactionDebitValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         Transaction transaction = (Transaction) target;
-        if(transaction.getValue() - transaction.getPlayer().getBalance() <= 0)
+        if(transaction.value() - transaction.player().balance() <= 0)
             errors.rejectValue("value", "Credit exceeds balance");
     }
 }

@@ -13,23 +13,20 @@ import lombok.*;
         allocationSize = 1,
         schema = "service_schema"
 )
-@Getter
-@Setter
-@RequiredArgsConstructor
-@NoArgsConstructor
-public class PlayerHistory {
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "player_history_sequence")
-    @NotNull
-    private Integer id;
+public record PlayerHistory(
+        @Id
+        @Column(name = "id")
+        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "player_history_sequence")
+        Integer id,
 
-    @ManyToOne
-    @JoinColumn(name = "player_id", referencedColumnName = "id")
-    @NotNull
-    @NonNull private Player player;
+        @ManyToOne
+        @JoinColumn(name = "player_id", referencedColumnName = "id")
+        Player player,
 
-    @Column(name = "what_player_doing")
-    @NotNull
-    @NonNull private String whatPlayerDoing;
+        @Column(name = "what_player_doing")
+        String whatPlayerDoing
+) {
+        public PlayerHistory() {
+                this(null, null, null);
+        }
 }

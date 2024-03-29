@@ -13,45 +13,48 @@ import java.util.List;
 @Entity
 @Table(name = "player", schema = "entity_schema")
 @Builder
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class Player implements UserDetails {
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "player_seq_gen")
-    @SequenceGenerator(name = "player_seq_gen", sequenceName = "entity_schema.player_sequence", allocationSize = 1,
-            schema = "entity_schema")
-    @NotNull
-    private Integer id;
+public record Player(
+        @Id
+        @Column(name = "id")
+        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "player_seq_gen")
+        @SequenceGenerator(name = "player_seq_gen", sequenceName = "entity_schema.player_sequence", allocationSize = 1,
+                schema = "entity_schema")
+        Integer id,
 
-    @Column(name = "mail")
-    @NotEmpty
-    @Size(min = 2, max = 100, message = "Mail is incorrect")
-    @Email
-    private String mail;
+        @Column(name = "mail")
+        String mail,
 
-    @Column(name = "username")
-    private String username;
+        @Column(name = "username")
+        String username,
 
-    @Column(name = "password")
-    @NotEmpty
-    @Size(min = 5, max = 100, message = "Password is incorrect")
-    private String password;
+        @Column(name = "password")
+        String password,
 
-    @Column(name = "balance")
-    @Min(0)
-    @NotNull
-    private Integer balance = 100;
+        @Column(name = "balance")
+        Integer balance,
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
-    private Role role;
+        @Enumerated(EnumType.STRING)
+        @Column(name = "role", nullable = false)
+        Role role
+) implements UserDetails {
+
+    public Player() {
+        this(null, null, null, null, null, null);
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return null;
     }
 
     @Override

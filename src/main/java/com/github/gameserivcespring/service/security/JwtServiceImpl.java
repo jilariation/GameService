@@ -31,9 +31,9 @@ public class JwtServiceImpl implements JwtService {
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         if (userDetails instanceof Player customUserDetails) {
-            claims.put("id", customUserDetails.getId());
-            claims.put("email", customUserDetails.getMail());
-            claims.put("role", customUserDetails.getRole());
+            claims.put("id", customUserDetails.id());
+            claims.put("email", customUserDetails.mail());
+            claims.put("role", customUserDetails.role());
         }
         return generateToken(claims, userDetails);
     }

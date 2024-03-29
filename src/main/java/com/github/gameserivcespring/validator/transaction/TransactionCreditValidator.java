@@ -18,7 +18,7 @@ public class TransactionCreditValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         Transaction transaction = (Transaction) target;
-        if(transaction.getValue() < 0)
+        if(transaction.value() < 0)
             errors.rejectValue("value", "The value must be greater than zero");
     }
 }

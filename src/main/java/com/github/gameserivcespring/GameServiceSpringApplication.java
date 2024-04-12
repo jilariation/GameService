@@ -8,16 +8,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-@OpenAPIDefinition(
-	info = @Info(
-			title = "Game Service System API",
-			description = "Game Service", version = "1.0.0",
-			contact = @Contact(
-					name = "Александр Марыгин",
-					email = "aleksandermarigyn18@gmail.com"
-			)
-	)
-)
 @SpringBootApplication
 public class GameServiceSpringApplication {
 

@@ -1,23 +1,8 @@
 package com.github.gameserivcespring.service;
 
-import com.github.gameserivcespring.repository.history.PlayerHistoryRepository;
-import com.github.gameserivcespring.repository.player.entity.Player;
-import com.github.gameserivcespring.repository.history.entity.PlayerHistory;
-import com.github.gameserivcespring.repository.player.entity.PlayerHistoryEnum;
-import com.github.gameserivcespring.service.player.PlayerHistoryServiceImpl;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.PostgreSQLContainer;
-
-import static org.mockito.Mockito.*;
 
 @DisplayName("Unit-testing for PlayerHistoryService")
 @SpringBootTest()

@@ -1,14 +1,17 @@
-version: "3.1"
+version: '3.8'
 
 services:
-  gs-db:
-    container_name: dev-gs-db
-    image: postgres:16-alpine3.19
-    environment:
-      POSTGRES_DB: "dev_gs_db"
-      POSTGES_USER: "postgres"
-      POSTGRES_PASSWORD: "postgres"
-    volumes:
-      - "./postgres_data:/var/lib/postgresql/date/"
+  postgresql:
+    image: postgres:latest
+    container_name: my_postgres_container
     ports:
       - "5432:5432"
+    environment:
+      POSTGRES_DB: dev_gs_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+
+volumes:
+  postgresql_data:

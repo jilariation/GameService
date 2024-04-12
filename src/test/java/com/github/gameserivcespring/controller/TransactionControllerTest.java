@@ -1,32 +1,11 @@
 package com.github.gameserivcespring.controller;
 
-import com.github.gameserivcespring.repository.transaction.dto.TransactionDTO;
-import com.github.gameserivcespring.repository.player.entity.Player;
-import com.github.gameserivcespring.repository.history.entity.PlayerHistory;
-import com.github.gameserivcespring.repository.transaction.entity.Transaction;
-import com.github.gameserivcespring.service.player.PlayerHistoryService;
-import com.github.gameserivcespring.service.player.PlayerService;
-import com.github.gameserivcespring.service.transaction.TransactionService;
-import com.github.gameserivcespring.validator.transaction.TransactionCreditValidator;
-import com.github.gameserivcespring.validator.transaction.TransactionDebitValidator;
-import io.restassured.RestAssured;
 import org.junit.jupiter.api.*;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.validation.BindingResult;
-import org.testcontainers.containers.PostgreSQLContainer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 @DisplayName("Unit-testing for TransactionController")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

@@ -1,6 +1,5 @@
 package com.github.gameserivcespring.notificationservice.repository.entity;
 
-import com.github.gameserivcespring.userservice.repository.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;

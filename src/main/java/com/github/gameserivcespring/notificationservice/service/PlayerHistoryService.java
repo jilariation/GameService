@@ -2,7 +2,6 @@ package com.github.gameserivcespring.notificationservice.service;
 
 import com.github.gameserivcespring.notificationservice.repository.dto.PlayerHistoryDTO;
 import com.github.gameserivcespring.notificationservice.repository.dto.PlayerHistoryResponse;
-import com.github.gameserivcespring.userservice.repository.entity.User;
 import com.github.gameserivcespring.notificationservice.repository.entity.PlayerHistory;
 
 import java.util.List;

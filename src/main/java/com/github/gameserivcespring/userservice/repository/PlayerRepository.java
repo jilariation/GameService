@@ -4,6 +4,8 @@ import com.github.gameserivcespring.userservice.repository.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.UUID;
+
 /**
  * Репозиторий для {@link User}
  */
@@ -51,4 +53,10 @@ public interface PlayerRepository extends JpaRepository<User, Integer> {
      * @return Возвращает true или false в зависимости от результата
      */
     boolean existsByMail(String mail);
+
+    /**
+     * Удаляет пользователя по его ID
+     * @param id ID пользователя
+     */
+    void deleteById(UUID id);
 }

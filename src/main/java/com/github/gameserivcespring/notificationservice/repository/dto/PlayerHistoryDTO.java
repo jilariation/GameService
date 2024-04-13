@@ -1,6 +1,5 @@
 package com.github.gameserivcespring.notificationservice.repository.dto;
 
-import com.github.gameserivcespring.userservice.repository.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

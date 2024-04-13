@@ -2,12 +2,12 @@ package com.github.gameserivcespring.userservice.service;
 
 import com.github.gameserivcespring.userservice.repository.dto.SignInRequest;
 import com.github.gameserivcespring.userservice.repository.dto.SignUpRequest;
-import com.github.gameserivcespring.userservice.repository.entity.User;
 import com.github.gameserivcespring.userservice.repository.entity.Role;
 import com.github.gameserivcespring.userservice.repository.dto.JwtAuthenticationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,17 +23,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     @Transactional
     public JwtAuthenticationResponse signUp(SignUpRequest request) {
-        var player = User.builder()
-                .username(request.getUsername())
-                .mail(request.getMail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .balance(100)
-                .role(Role.ROLE_USER)
-                .build();
+        var user = new User();
 
-        playerService.create(player);
+        playerService.(user);
 
-        var jwt = jwtService.generateToken(player);
+        var jwt = jwtService.generateToken(user);
         return new JwtAuthenticationResponse(jwt);
     }
 

@@ -1,7 +1,5 @@
 package com.github.gameserivcespring.userservice.controller;
 
-import com.github.gameserivcespring.aspect.annotation.History;
-import com.github.gameserivcespring.aspect.annotation.Logging;
 import com.github.gameserivcespring.userservice.repository.dto.UserDTO;
 import com.github.gameserivcespring.userservice.service.PlayerService;
 import lombok.RequiredArgsConstructor;

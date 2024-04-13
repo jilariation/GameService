@@ -1,6 +1,5 @@
 package com.github.gameserivcespring.notificationservice.repository;
 
-import com.github.gameserivcespring.userservice.repository.entity.User;
 import com.github.gameserivcespring.notificationservice.repository.entity.PlayerHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

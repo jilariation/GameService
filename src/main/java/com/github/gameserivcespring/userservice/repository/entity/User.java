@@ -1,8 +1,11 @@
 package com.github.gameserivcespring.userservice.repository.entity;
 
+import com.github.gameserivcespring.userservice.automation.AbstractModel;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,18 +14,11 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "player")
-@Builder
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class User implements UserDetails {
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private Integer id;
-
+@EqualsAndHashCode(callSuper = true)
+public class User extends AbstractModel implements UserDetails {
     @Column(name = "mail")
     private String mail;
 
@@ -33,7 +29,7 @@ public class User implements UserDetails {
     private String password;
 
     @Column(name = "balance")
-    private Integer balance = 100;
+    private Integer balance;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
